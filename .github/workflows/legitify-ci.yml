@@ -37,5 +37,9 @@ jobs:
        with:
          name: legitify-report.txt
          path: legitify-report.txt
-
+     - name: Upload Error Log
+       uses: actions/upload-artifact@v2
+       with:
+         name: legitify-error.log
+         path: legitify-error.log
       
