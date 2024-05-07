@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Legitify Action
-        uses: Legit-Labs/legitify@main
+        uses: Legit-Labs/legitify@v1.0.7
         with:
           github_token: ${{ secrets.TEST_TOKEN }}
           ignore-policies: |
              non_admins_can_create_public_repositories
              requires_status_checks
+          output-format: human-readable
+          output-file: legify-report.txt
