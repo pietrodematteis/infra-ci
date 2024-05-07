@@ -26,9 +26,9 @@ jobs:
      - name: Legitify Scan - CLI
        run: |
           if [[ -f "legitify" ]]; then
-             ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-format human-readable --output-file legitify-report.txt
+             ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-file legitify-report.txt
           else
              wget https://legitify.legitsecurity.com/1.0.7/linux/amd64.tar.gz
              tar -xzf amd64.tar.gz
-             ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-format human-readable --output-file legitify-report.txt
+             ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-file legitify-report.txt
           fi
