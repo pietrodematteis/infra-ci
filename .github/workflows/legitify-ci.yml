@@ -33,13 +33,14 @@ jobs:
              ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-file legitify-report.txt
           fi
      - name: Upload Result
-       uses: actions/upload-artifact@v2
+       uses: actions/upload-artifact@v4
        with:
          name: legitify-report.txt
          path: legitify-report.txt
      - name: Upload Error Log
-       uses: actions/upload-artifact@v2
+       uses: actions/upload-artifact@v4
        with:
          name: legitify-error.log
          path: legitify-error.log
+         if-no-files-found: ignore
       
