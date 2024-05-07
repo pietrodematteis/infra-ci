@@ -33,9 +33,9 @@ jobs:
              ./legitify analyze --token=${{ secrets.TEST_TOKEN }} --output-file legitify-report.txt
           fi
      - name: Upload Result
-        uses: actions/upload-artifact@v2
-        with:
-          name: legitify-report.txt
-          path: legitify-report.txt
+       uses: actions/upload-artifact@v2
+       with:
+         name: legitify-report.txt
+         path: legitify-report.txt
 
       
