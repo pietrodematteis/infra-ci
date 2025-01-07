@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  OUTPUT_NAME: 'cyclonedxSBOM.json'
+  OUTPUT_NAME: 'cyclonedxSBOM'
 jobs:
   build:
     runs-on: ubuntu-latest
