@@ -1,0 +1,54 @@
+name: Container Image SBOM
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_repository:
+        description: 'Container Image Repository'
+        required: true
+        default: ''
+
+env:
+  REGISTRY: docker.io
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget -y
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.44.0/trivy_0.44.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.44.0_Linux-64bit.deb
+      - name: Cache Trivy vulnerability DB
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/trivy/db
+          key: ${{ runner.os }}-trivy-db-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-trivy-db
+
+      - name: Run Trivy vulnerability scanner on Container Image
+        uses: aquasecurity/trivy-action@master
+        env:
+          TRIVY_DB_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-db"
+        with:
+          image-ref: ${{ inputs.image_repository }}
+          format: 'cyclonedx'
+          output: 'cyclonedxSBOM.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: LOW,MEDIUM,HIGH,CRITICAL
+
+      - name: Upload Trivy JSON Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclonedxSBOM.json
+          path: cyclonedxSBOM.json
