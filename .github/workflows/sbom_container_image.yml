@@ -33,7 +33,14 @@ jobs:
           key: ${{ runner.os }}-trivy-db-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-trivy-db
-
+      - name: Extract parts
+        id: extract_parts
+        run: |
+          input=${{ inputs.image_repository }}
+          repo_name=$(echo $input | cut -d'/' -f4 | cut -d':' -f1)
+          version=$(echo $input | cut -d':' -f2)
+          echo "::set-output name=repo_name::$repo_name"
+          echo "::set-output name=version::$version"
       - name: Run Trivy vulnerability scanner on Container Image
         uses: aquasecurity/trivy-action@master
         env:
