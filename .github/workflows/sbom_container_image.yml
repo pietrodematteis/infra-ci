@@ -52,7 +52,8 @@ jobs:
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: LOW,MEDIUM,HIGH,CRITICAL
+          severity: HIGH,CRITICAL
+          #UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
 
       - name: Upload Trivy JSON Report
         uses: actions/upload-artifact@v4
