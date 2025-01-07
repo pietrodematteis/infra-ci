@@ -43,7 +43,7 @@ jobs:
           echo "OUTPUT_NAME=${repo_name}${repo_ver}-cyclonedxSBOM.json" >> $GITHUB_ENV
           echo "${repo_name}"
           echo "${repo_ver}"
-          echo "${{env.OUTPUT_NAME}}"
+          echo "${{OUTPUT_NAME}}"
       - name: Run Trivy vulnerability scanner on Container Image
         uses: aquasecurity/trivy-action@master
         env:
