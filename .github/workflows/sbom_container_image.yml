@@ -42,7 +42,7 @@ jobs:
           last_part=$(echo $input | awk -F'/' '{print $NF}')
           REPO_NAME=$(echo $last_part | cut -d':' -f1)
           REPO_VER=$(echo $last_part | cut -d':' -f2)
-          OUTPUT_NAME= $(echo $REPO_NAME | $REPO_VER| $OUTPUT_NAME)
+          OUTPUT_NAME= $REPO_NAME-$REPO_VER-$OUTPUT_NAME
           echo "$REPO_NAME"
           echo "$REPO_VER"
           echo "$OUTPUT_NAME"
