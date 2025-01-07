@@ -41,8 +41,8 @@ jobs:
           repo_name=$(echo $last_part | cut -d':' -f1)
           repo_ver=$(echo $last_part | cut -d':' -f2)
           env.OUTPUT_NAME="${repo_name}${repo_ver}-${{ env.OUTPUT_NAME }}"
-          echo "${{ repo_name }}"
-          echo "${{ repo_ver }}"
+          echo "${ repo_name }"
+          echo "${ repo_ver }"
           echo "${{ env.OUTPUT_NAME }}"
       - name: Run Trivy vulnerability scanner on Container Image
         uses: aquasecurity/trivy-action@master
