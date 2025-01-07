@@ -10,8 +10,6 @@ on:
 
 env:
   REGISTRY: docker.io
-  REPO_NAME: ''
-  REPO_VER: ''
   OUTPUT_NAME: 'cyclonedxSBOM.json'
 jobs:
   build:
@@ -40,12 +38,12 @@ jobs:
         run: |
           input=${{ inputs.image_repository }}
           last_part=$(echo $input | awk -F'/' '{print $NF}')
-          env.REPO_NAME=$(echo $last_part | cut -d':' -f1)
-          env.REPO_VER=$(echo $last_part | cut -d':' -f2)
-          env.OUTPUT_NAME="${REPO_NAME}${REPO_VER}-${OUTPUT_NAME}"
-          echo "$env.REPO_NAME"
-          echo "$env.REPO_VER"
-          echo "$env.OUTPUT_NAME"
+          repo_name=$(echo $last_part | cut -d':' -f1)
+          repo_ver=$(echo $last_part | cut -d':' -f2)
+          env.OUTPUT_NAME="${repo_name}${repo_ver}-${{ env.OUTPUT_NAME }}"
+          echo "${{ env.REPO_NAME }}"
+          echo "${{ env.REPO_VER }}"
+          echo "${{ env.OUTPUT_NAME }}"
       - name: Run Trivy vulnerability scanner on Container Image
         uses: aquasecurity/trivy-action@master
         env:
