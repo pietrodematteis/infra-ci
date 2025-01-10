@@ -1,0 +1,62 @@
+name: Container Image SBOM spdx format
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_repository:
+        description: 'Container Image Repository'
+        required: true
+        default: ''
+
+env:
+  REGISTRY: docker.io
+  OUTPUT_NAME: 'spdxSBOM'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget -y
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.44.0/trivy_0.44.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.44.0_Linux-64bit.deb
+      - name: Cache Trivy vulnerability DB
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/trivy/db
+          key: ${{ runner.os }}-trivy-db-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-trivy-db
+      - name: Extract parts
+        id: extract_parts
+        run: |
+          input=${{ inputs.image_repository }}
+          last_part=$(echo $input | awk -F'/' '{print $NF}')
+          repo_name=$(echo $last_part | cut -d':' -f1)
+          repo_ver=$(echo $last_part | cut -d':' -f2)
+          echo "OUTPUT_NAME=${repo_name}${repo_ver}-${{env.OUTPUT_NAME}}" >> $GITHUB_ENV
+      - name: Run Trivy vulnerability scanner on Container Image
+        uses: aquasecurity/trivy-action@master
+        env:
+          TRIVY_DB_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-db"
+        with:
+          image-ref: ${{ inputs.image_repository }}
+          format: 'spdx-json'
+          output: 'spdxSBOM.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: LOW,MEDIUM,HIGH,CRITICAL
+          #UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+
+      - name: Upload Trivy JSON Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUTPUT_NAME }}
+          path: spdxSBOM.json
