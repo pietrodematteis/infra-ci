@@ -1,4 +1,4 @@
-name: Source Image SBOM - Dependency Check
+name: Source Code SBOM - Dependency Check
 
 on:
   workflow_dispatch:
