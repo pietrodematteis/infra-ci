@@ -7,7 +7,10 @@ on:
         description: 'Source Repository'
         required: true
         default: ''
-
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
 jobs:
   depchecktest:
     runs-on: ubuntu-latest
@@ -17,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ inputs.src_repository }}
+          ref: ${{ inputs.src_branch }}
       - name: Build project with Maven
         run: mvn package -Dmaven.test.skip=true
         #run: mvn clean build
