@@ -18,7 +18,8 @@ jobs:
         with:
           repository: ${{ inputs.src_repository }}
       - name: Build project with Maven
-        run: mvn clean install
+        run: mvn package -Dmaven.test.skip=true
+        #run: mvn clean build
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
