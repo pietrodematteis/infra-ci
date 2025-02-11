@@ -30,7 +30,7 @@ jobs:
         with:
           project: 'test'
           path: '.'
-          format: 'HTML'
+          format: 'ALL'
           out: 'reports' # this is the default, no need to specify unless you wish to override it
           args: >
             #--failOnCVSS 7
