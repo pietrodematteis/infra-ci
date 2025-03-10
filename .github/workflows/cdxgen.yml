@@ -36,12 +36,16 @@ jobs:
         docker run --rm \
           -v "$(pwd)":/app:rw \
           -t ghcr.io/owasp-dep-scan/dep-scan \
-          -i /app/bom.json -t java -o /app/depscan-report.json
+          --no-banner \
+          --bom BOM \
+          --explain \
+          -i /app/bom.json \
+          -o /app/depscan-report.json
 
     - name: Upload SBOM & Scan Report
       uses: actions/upload-artifact@v4
       with:
         name: sbom-results
         path: |
-          bom.json
+          bom.json \
           depscan-report.json
