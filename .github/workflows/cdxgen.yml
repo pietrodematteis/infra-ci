@@ -1,0 +1,38 @@
+name: Generate SBOM with cdxgen (Docker)
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.src_repository }}
+        ref: ${{ inputs.src_branch }}
+
+    - name: Generate SBOM using cdxgen container
+      run: |
+        docker run --rm \
+          -v "$(pwd)":/app:rw \
+          -v /tmp:/tmp \
+          -t ghcr.io/cyclonedx/cdxgen:latest \
+          -r /app -o /app/bom.json -t java
+
+    - name: Upload SBOM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom
+        path: bom.json
