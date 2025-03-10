@@ -42,4 +42,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: sbom-results
-        path: /app/*.json
+        path: |
+          bom.json
+          depscan-report.json
