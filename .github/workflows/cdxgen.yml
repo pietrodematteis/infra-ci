@@ -37,7 +37,7 @@ jobs:
 
     - name: Scan SBOM with depscan
       run: |
-        depscan -i bom.json -t java -o depscan-report.json --explain
+        depscan src bom.json -t java -o depscan-report.json
 
     - name: Upload SBOM & Scan Report
       uses: actions/upload-artifact@v4
