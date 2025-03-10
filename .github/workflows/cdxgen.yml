@@ -37,7 +37,7 @@ jobs:
 
     - name: Scan SBOM with depscan
       run: |
-        depscan src bom.json reports-dir depscan-report.json
+        depscan bom BOM src bom.json reports-dir depscan-report.json
 
     - name: Upload SBOM & Scan Report
       uses: actions/upload-artifact@v4
