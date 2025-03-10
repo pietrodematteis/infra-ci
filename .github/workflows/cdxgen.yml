@@ -35,7 +35,7 @@ jobs:
       run: |
         docker run --rm \
           -v "$(pwd)":/app:rw \
-          -t ghcr.io/appthreat/depscan:latest \
+          -t ghcr.io/owasp-dep-scan/dep-scan \
           -i /app/bom.json -t java -o /app/depscan-report.json
 
     - name: Upload SBOM & Scan Report
