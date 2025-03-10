@@ -31,16 +31,13 @@ jobs:
           -t ghcr.io/cyclonedx/cdxgen:latest \
           -r /app -o /app/bom.json -t java
 
-    - name: Scan SBOM with depscan container
+    - name: Install depscan
       run: |
-        docker run --rm \
-          -v "$(pwd)":/app:rw \
-          -t ghcr.io/owasp-dep-scan/dep-scan \
-          --no-banner \
-          --bom BOM \
-          --explain \
-          -i /app/bom.json \
-          -o /app/depscan-report.json
+        pip install depscan
+
+    - name: Scan SBOM with depscan
+      run: |
+        depscan -i bom.json -t java -o depscan-report.json --explain
 
     - name: Upload SBOM & Scan Report
       uses: actions/upload-artifact@v4
