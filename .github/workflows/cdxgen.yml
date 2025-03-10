@@ -44,5 +44,5 @@ jobs:
       with:
         name: sbom-results
         path: |
-          bom.json \
+          bom.json 
           depscan-report.json
