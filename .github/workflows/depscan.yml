@@ -1,0 +1,35 @@
+name: Security Scan with depscan
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.src_repository }}
+          ref: ${{ inputs.src_branch }}
+      - name: Install cdxgen & depscan
+        run: |
+          npm install -g @cyclonedx/cdxgen
+          pip install owasp-depscan
+      - name: Generate SBOM
+        run: cdxgen -o bom.json -t java .
+      - name: Scan for Vulnerabilities
+        run: depscan --bom bom.json --output vuln-report.json
+      - name: Upload Scan Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: vuln-report
+          path: vuln-report.json
