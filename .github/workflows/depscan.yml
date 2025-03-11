@@ -27,7 +27,7 @@ jobs:
       - name: Generate SBOM
         run: cdxgen -o bom.json -t java .
       - name: Scan for Vulnerabilities
-        run: depscan --bom bom.json --report-name vuln-report.json
+        run: depscan --bom bom.json --report-name vuln-report.json --explain
       - name: Upload Scan Results
         uses: actions/upload-artifact@v4
         with:
