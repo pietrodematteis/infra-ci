@@ -36,8 +36,7 @@ jobs:
         pip install depscan
 
     - name: list files
-      run: cd /app &&
-          ls -la
+      run: ls -la
 
     - name: Scan SBOM with depscan
       run: |
