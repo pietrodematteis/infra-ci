@@ -35,6 +35,10 @@ jobs:
       run: |
         pip install depscan
 
+    - name: list files
+      run: cd /app \
+          ls -la
+
     - name: Scan SBOM with depscan
       run: |
         depscan bom BOM src bom.json t java reports-dir depscan-report.json
