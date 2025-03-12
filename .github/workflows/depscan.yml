@@ -25,7 +25,8 @@ jobs:
           npm install -g @cyclonedx/cdxgen
           pip install owasp-depscan
       - name: Generate SBOM
-        run: cdxgen -o bom.json -t java .
+        run: cdxgen -o bom.json -t python .
+        #run: cdxgen -o bom.json -t java .
       - name: Scan for Vulnerabilities
         run: depscan --bom bom.json --report-name vuln-report.json --explain
       - name: list files
