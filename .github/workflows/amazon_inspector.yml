@@ -6,6 +6,10 @@ on:
         description: 'Source Repository'
         required: true
         default: ''
+      src_artifact_type:
+        description: 'artifact_type to either repository, container, binary, or archive'
+        required: false
+        default: 'repository'
         
 jobs:
  daily_job:
@@ -38,7 +42,7 @@ jobs:
        uses: aws-actions/vulnerability-scan-github-action-for-amazon-inspector@v1
        with:
          # change artifact_type to either 'repository', 'container', 'binary', or 'archive'.
-         artifact_type: 'repository'
+         artifact_type: ${{ inputs.src_artifact_type }}
 
          # change artifact_path to the file path or container image you would like to scan.
          # File paths should be relative to your root project directory.
