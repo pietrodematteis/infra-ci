@@ -22,7 +22,7 @@ jobs:
    steps:
      - name: Scan container
        id: inspector
-       uses: aws/vulnerability-scan-github-action-for-amazon-inspector@v1
+       uses: aws-actions/vulnerability-scan-github-action-for-amazon-inspector@v1
        with:
         artifact_type: ${{ inputs.src_artifact_type }}
         artifact_path: ${{ inputs.src_repository }}
