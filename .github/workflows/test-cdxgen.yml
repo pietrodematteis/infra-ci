@@ -25,7 +25,7 @@ jobs:
           repository: ${{ inputs.src_repository }}
           ref: ${{ inputs.src_branch }}
       - name: Generate CBOM
-        run: cdxgen -o cbom.json --include-crypto -t ${{ inputs.src_type }}
+        run: node /opt/cdxgen/bin/cdxgen.js -o cbom.json --include-crypto -t ${{ inputs.src_type }}
       - name: list files
         run: ls -la
       - name: crypto check
