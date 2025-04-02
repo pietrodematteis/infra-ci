@@ -8,7 +8,7 @@ on:
         required: true
         default: ''
       src_type:
-        description: 'Project Type (java, python, dotnet)'
+        description: 'Project Type (docker, container)'
         required: false
         default: 'java'
 jobs:
