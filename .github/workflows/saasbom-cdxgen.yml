@@ -32,13 +32,12 @@ jobs:
         run: saasbom -t ${{ inputs.src_type }}
       - name: Generate SBOM
         run: cdxgen -o bom.json -t ${{ inputs.src_type }} .
-      - name: Generate SBOM
-        #run: evinse -i bom.json -o bom.evinse.json .
-        run: cdxgen -t saas --profile saas --deep -o saasbom.json .
+      - name: Use evinse
+        run: evinse -i bom.json -o bom.evinse.json .
       - name: list files
         run: ls -la
       - name: Upload Scan Results
         uses: actions/upload-artifact@v4
         with:
           name: saasbom
-          path: saasbom.json
+          path: bom.evinse.json
