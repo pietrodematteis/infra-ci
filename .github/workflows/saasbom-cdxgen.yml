@@ -29,11 +29,15 @@ jobs:
           npm install -g @cyclonedx/cdxgen
           npm install @appthreat/atom
       - name: Generate SaaSBOM
-        run: saasbom -o saasbom.json -t ${{ inputs.src_type }}
+        run: saasbom -t ${{ inputs.src_type }}
+      - name: Generate SBOM
+        run: cdxgen -o bom.json -t ${{ inputs.src_type }} .
+      - name: Generate SBOM
+        run: evinse -i bom.json -o bom.evinse.json .
       - name: list files
         run: ls -la
       - name: Upload Scan Results
         uses: actions/upload-artifact@v4
         with:
           name: saasbom
-          path: saasbom.json
+          path: bom.evinse.json
