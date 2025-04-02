@@ -27,6 +27,7 @@ jobs:
       - name: Install cdxgen & depscan
         run: |
           npm install -g @cyclonedx/cdxgen
+          npm install @appthreat/atom
       - name: Generate SaaSBOM
         run: saasbom -o saasbom.json -t ${{ inputs.src_type }}
       - name: list files
