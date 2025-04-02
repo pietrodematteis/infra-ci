@@ -31,6 +31,8 @@ jobs:
         run: cdxgen -o cbom.json --include-crypto -t ${{ inputs.src_type }}
       - name: list files
         run: ls -la
+      - name: crypto check
+        run: grep -E "Cipher|MessageDigest|KeyPairGenerator|KeyStore" -r src/
       - name: Upload Scan Results
         uses: actions/upload-artifact@v4
         with:
