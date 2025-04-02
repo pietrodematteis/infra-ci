@@ -17,7 +17,7 @@ on:
         default: 'java'
 jobs:
   security-scan:
-    runs-on: cyclonedx/cdxgen:sha256-3072a29a8b3d8ea44a7d0e542fbfbe850be10a236c3f673cff644ee2cb21653a
+    runs-on: cyclonedx/cdxgen:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
