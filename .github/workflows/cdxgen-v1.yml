@@ -1,4 +1,4 @@
-name: Generate CBOM with cdxgen
+name: Generate CBOM with cdxgen (ver installed)
 
 on:
   workflow_dispatch:
