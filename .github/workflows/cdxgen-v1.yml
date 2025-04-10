@@ -1,0 +1,38 @@
+name: Generate CBOM with cdxgen
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+      src_type:
+        description: 'Project Type (java, python, dotnet)'
+        required: false
+        default: 'java'
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.src_repository }}
+          ref: ${{ inputs.src_branch }}
+      - name: Install cdxgen
+        run: |
+          npm install -g @cyclonedx/cdxgen
+      - name: Generate SBOM
+        run: cdxgen -o sbom.json -t ${{ inputs.src_type }}
+      - name: list files
+        run: ls -la
+      - name: Upload Scan Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
