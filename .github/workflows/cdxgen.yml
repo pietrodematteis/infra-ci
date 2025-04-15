@@ -49,7 +49,7 @@ jobs:
       run: df -h
     
     - name: clean space
-      run: docker image prune
+      run: docker image prune -f
     
     - name: Scan SBOM with depscan
       run: |
