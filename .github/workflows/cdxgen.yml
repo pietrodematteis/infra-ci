@@ -22,14 +22,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: free space at beginning
+      run: df -h
+      
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.src_repository }}
         ref: ${{ inputs.src_branch }}
-    
-    - name: free space
-      run: df -BM /var/lib/docker
+
+    - name: free space after checkout
+      run: df -h
     
     - name: Generate SBOM using cdxgen container
       run: |
@@ -42,11 +45,14 @@ jobs:
     - name: list files
       run: ls -la
 
+    - name: free space after cdxgen
+      run: df -h
+    
     - name: clean space
       run: docker system prune -f
     
     - name: free space
-      run: df -BM /var/lib/docker
+      run: df -h
       
     - name: Scan SBOM with depscan
       run: |
@@ -55,8 +61,11 @@ jobs:
           --bom /app/bom.json \
           --report-template /app/bom.json \
           --reports-dir /app
-        
-    - name: Upload Trivy results
+
+    - name: free space after dep-scan
+      run: df -h
+    
+    - name: Upload SBOM results
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.OUTPUT_NAME }}
