@@ -39,6 +39,9 @@ jobs:
     - name: list files
       run: ls -la
 
+    - name: free space
+      run: df -BM /var/lib/docker
+      
     - name: Scan SBOM with depscan
       run: |
         docker run --rm \
