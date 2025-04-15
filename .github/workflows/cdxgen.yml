@@ -27,7 +27,10 @@ jobs:
       with:
         repository: ${{ inputs.src_repository }}
         ref: ${{ inputs.src_branch }}
-
+    
+    - name: free space
+      run: df -BM /var/lib/docker
+    
     - name: Generate SBOM using cdxgen container
       run: |
         docker run --rm \
@@ -39,6 +42,9 @@ jobs:
     - name: list files
       run: ls -la
 
+    - name: clean space
+      run: docker system prune -f
+    
     - name: free space
       run: df -BM /var/lib/docker
       
