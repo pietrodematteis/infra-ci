@@ -50,11 +50,15 @@ jobs:
     
     - name: clean space
       run: docker system prune -a -f
+
+    - name: free space after clean
+      run: df -h
     
     - name: Scan SBOM with depscan
       run: |
         docker run --rm \
           -v .:/app ghcr.io/owasp-dep-scan/dep-scan \
+          --version \
           --bom /app/bom.json \
           --report-template /app/bom.json \
           --reports-dir /app
