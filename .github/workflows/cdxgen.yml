@@ -49,11 +49,8 @@ jobs:
       run: df -h
     
     - name: clean space
-      run: docker system prune -f
+      run: docker images
     
-    - name: free space
-      run: df -h
-      
     - name: Scan SBOM with depscan
       run: |
         docker run --rm \
