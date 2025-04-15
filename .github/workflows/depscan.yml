@@ -42,9 +42,12 @@ jobs:
         docker run --rm \
           -e VDB_DATABASE_URL=ghcr.io/appthreat/vdbxz-app:v6 \
           -v .:/app ghcr.io/owasp-dep-scan/dep-scan \
-          --bom ${{ inputs.src_sbom }} \
-          --report-template ${{ inputs.src_sbom }} \
+          --bom /app/${{ inputs.src_sbom }} \
+          --report-template /app/${{ inputs.src_sbom }} \
           --reports-dir /app
+
+    - name: list files
+      run: ls -la
 
     - name: free space after dep-scan
       run: df -h
