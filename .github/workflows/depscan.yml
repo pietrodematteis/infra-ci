@@ -44,6 +44,7 @@ jobs:
       run: |
         docker run --rm \
           -v .:/app ghcr.io/owasp-dep-scan/dep-scan \
+          --debug \
           --bom /app/${{ inputs.src_sbom }} \
           --report-template /app/${{ inputs.src_sbom }} \
           --reports-dir /app
