@@ -43,7 +43,7 @@ jobs:
     - name: Scan SBOM with depscan
       run: |
         docker run --rm \
-          -e VDB_DATABASE_URL=ghcr.io/appthreat/vdbxz-app:v6
+          -e VDB_DATABASE_URL=ghcr.io/appthreat/vdbxz-app:v6 \
           -v .:/app ghcr.io/owasp-dep-scan/dep-scan \
           --debug \
           --bom /app/${{ inputs.src_sbom }} \
