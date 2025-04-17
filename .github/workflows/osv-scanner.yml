@@ -1,0 +1,75 @@
+name: Verify vulnerabilities from sbom with OSV-Scanner
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+      src_sbom:
+        description: 'sbom file name'
+        required: false
+        default: 'sbom.json'
+        
+permissions:
+  # Require writing security events to upload SARIF file to security tab
+  security-events: write
+  # Read commit contents
+  contents: read
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: free space at beginning
+      run: df -h
+      
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.src_repository }}
+        ref: ${{ inputs.src_branch }}
+
+    - name: free space after checkout
+      run: df -h
+    
+    - name: list files
+      run: ls -la
+
+    - name: "Run scanner"
+      uses: google/osv-scanner-action/osv-scanner-action@19734b480e0819e9fe058cb345d77fa08c55189f # v2.0.1
+      with:
+       scan-args: |-
+          --output=osv-results.json
+          --format=json
+          --sbom ${{ inputs.src_sbom }}
+          #--format table --output vulnerabilities-report.txt
+          #${{ inputs.scan-args }}
+      continue-on-error: true
+      
+    #- name: "Run osv-scanner-reporter"
+    #  uses: google/osv-scanner-action/osv-reporter-action@19734b480e0819e9fe058cb345d77fa08c55189f # v2.0.1
+    #  with:
+    #    scan-args: |-
+    #      --output=${{ inputs.matrix-property }}${{ inputs.results-file-name }}
+    #      --new=${{ inputs.matrix-property }}results.json
+    #      --gh-annotations=false
+    #      --fail-on-vuln=${{ inputs.fail-on-vuln }}
+
+    - name: list files
+      run: ls -la
+
+    - name: free space after osv-scanner
+      run: df -h
+    
+    - name: Upload SBOM results
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.OUTPUT_NAME }}
+        path: ${{github.workspace}}/*.json 
