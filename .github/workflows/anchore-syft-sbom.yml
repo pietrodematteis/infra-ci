@@ -38,10 +38,11 @@ jobs:
       uses: anchore/sbom-action@v0
       with:
         path: .
-        artifact-name: syftSBOM.json
-        dependency-snapshot: true
         format: cyclonedx-json
-
+        output-file: syftSBOM.json
+        #artifact-name: syftSBOM.json
+        #dependency-snapshot: true
+        
     - name: free space after scan
       run: df -h
 
