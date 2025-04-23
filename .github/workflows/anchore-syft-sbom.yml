@@ -1,0 +1,50 @@
+name: Generate SBOM with Anchore Syft
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  Anchore-Build-Scan:
+    permissions:
+      contents: write # required to upload to the Dependency submission API
+    runs-on: ubuntu-latest
+    steps:
+    - name: free space at beginning
+      run: df -h
+      
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.src_repository }}
+        ref: ${{ inputs.src_branch }}
+
+    - name: Scan the image and upload dependency results
+      uses: anchore/sbom-action@v0
+      with:
+        path: .
+        artifact-name: syftSBOM.json
+        dependency-snapshot: true
+        format: cyclonedx-json
+
+    - name: free space after scan
+      run: df -h
+    
+    - name: Upload Syft Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: syftSBOM
+        path: syftSBOM.json
+        
