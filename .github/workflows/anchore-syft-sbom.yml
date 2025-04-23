@@ -24,6 +24,9 @@ jobs:
     steps:
     - name: free space at beginning
       run: df -h
+    
+    - name: list files
+      run: ls -la
       
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -41,7 +44,10 @@ jobs:
 
     - name: free space after scan
       run: df -h
-    
+
+    - name: list files
+      run: ls -la
+      
     - name: Upload Syft Report
       uses: actions/upload-artifact@v4
       with:
