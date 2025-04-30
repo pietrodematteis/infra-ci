@@ -57,7 +57,7 @@ jobs:
           -v "$(pwd)":/app:rw \
           -v /tmp:/tmp \
           -t ghcr.io/cyclonedx/cdxgen:latest \
-          -r /app -o /app/bom.json -t ${{ inputs.src_type }}
+          -r /app -o /app/bom.json -t ${{ inputs.src_type }} \
           --profile ${{ inputs.src_profile }} --json-pretty
 
     - name: list files
