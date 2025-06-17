@@ -28,7 +28,8 @@ jobs:
         run: |
           npm install -g @cyclonedx/cdxgen
       - name: Generate CBOM
-        run: cdxgen -o cbom.json --include-crypto -t ${{ inputs.src_type }}
+        #run: cdxgen -o cbom.json --include-crypto -t ${{ inputs.src_type }}
+        run: cbom -t ${{ inputs.src_type }}
       - name: list files
         run: ls -la
       #- name: crypto check
