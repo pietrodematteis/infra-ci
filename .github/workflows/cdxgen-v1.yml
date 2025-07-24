@@ -15,6 +15,10 @@ on:
         description: 'Project Type (java, python, dotnet)'
         required: false
         default: 'java'
+      src_extra_options:
+        description: 'Additional Options to add (es. --required-only)'
+        required: false
+        default: ''
 jobs:
   security-scan:
     runs-on: ubuntu-latest
@@ -28,7 +32,7 @@ jobs:
         run: |
           npm install -g @cyclonedx/cdxgen
       - name: Generate SBOM
-        run: cdxgen -o sbom.json -t ${{ inputs.src_type }} --profile license-compliance --json-pretty
+        run: cdxgen -o sbom.json -t ${{ inputs.src_type }} --profile license-compliance --json-pretty ${{ inputs.src_extra_options }}
       - name: list files
         run: ls -la
       - name: Upload Scan Results
