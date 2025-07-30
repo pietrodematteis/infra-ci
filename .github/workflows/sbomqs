@@ -1,0 +1,71 @@
+name: Generate SBOM (with cdxgen) and Quality metrics for SBOM (with sbomqs)
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+      src_type:
+        description: 'Project Type (java, python, dotnet) see https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES'
+        required: false
+        default: 'java'
+
+env:
+  OUTPUT_NAME: 'cyclonedxSBOM'
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: free space at beginning
+      run: df -h
+      
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.src_repository }}
+        ref: ${{ inputs.src_branch }}
+
+    - name: free space after checkout
+      run: df -h
+    
+    - name: Generate SBOM using cdxgen container
+      run: |
+        docker run --rm \
+          -v "$(pwd)":/app:rw \
+          -v /tmp:/tmp \
+          -t ghcr.io/cyclonedx/cdxgen:latest \
+          -r /app -o /app/bom.json -t ${{ inputs.src_type }} \
+          --profile 'license-compliance' --json-pretty
+
+    - name: list files
+      run: ls -la
+    
+    - name: Compliance SBOM
+      run: |
+        docker run --rm \
+          -v .:/app interlynk-io/sbomqs compliance \
+          --ntia \
+          --color \
+          /app/bom.json
+
+    - name: Score SBOM
+      run: |
+        docker run --rm \
+          -v .:/app ghcr.io/interlynk-io/sbomqs score \
+          /app/bom.json
+
+    - name: list files
+      run: ls -la
+    
+    - name: Upload SBOM results
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.OUTPUT_NAME }}
+        path: ${{github.workspace}}/*.json 
