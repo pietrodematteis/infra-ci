@@ -1,4 +1,4 @@
-name: Generate SBOM with cdxgen and scan with depscan
+name: Generate SBOM with cdxgen and scan with depscan (version Docker Image)
 
 on:
   workflow_dispatch:
