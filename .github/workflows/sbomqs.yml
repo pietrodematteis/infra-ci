@@ -52,14 +52,14 @@ jobs:
         docker run --rm \
           -v .:/app interlynk-io/sbomqs compliance \
           --ntia \
-          --color \
+          -j \
           /app/bom.json
 
     - name: Score SBOM
       run: |
         docker run --rm \
           -v .:/app ghcr.io/interlynk-io/sbomqs score \
-          /app/bom.json
+          -j /app/bom.json
 
     - name: list files
       run: ls -la
