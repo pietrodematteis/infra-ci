@@ -41,7 +41,7 @@ jobs:
           -v "$(pwd)":/app:rw \
           -v /tmp:/tmp \
           -t ghcr.io/cyclonedx/cdxgen:v11.4.3@sha256:a7f032771f4937468dc288f8e94d292e84fb4f698bbd8b0c3a059838bb481277 \
-          -r /app -o /app/bom.json -t ${{ inputs.src_type }} \
+          -r /app -o /tmp/bom.json -t ${{ inputs.src_type }} \
           --profile license-compliance --json-pretty
 
     - name: list files
@@ -50,16 +50,19 @@ jobs:
     - name: Compliance SBOM
       run: |
         docker run --rm \
-          -v .:/app interlynk-io/sbomqs compliance \
+          -v /tmp:/tmp \
+          interlynk-io/sbomqs compliance \
           --ntia \
           -j \
-          /app/bom.json
+          /tmp/bom.json
 
     - name: Score SBOM
       run: |
         docker run --rm \
-          -v .:/app ghcr.io/interlynk-io/sbomqs score \
-          -j /app/bom.json
+          -v /tmp:/tmp \
+          ghcr.io/interlynk-io/sbomqs score \
+          -j \
+          /tmp/bom.json
 
     - name: list files
       run: ls -la
@@ -68,4 +71,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.OUTPUT_NAME }}
-        path: ${{github.workspace}}/*.json 
+        path: /tmp/*.json 
