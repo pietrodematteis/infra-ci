@@ -51,7 +51,7 @@ jobs:
       run: |
         docker run --rm \
           -v /tmp:/tmp \
-          interlynk-io/sbomqs compliance \
+          ghcr.io/interlynk-io/sbomqs compliance \
           --ntia \
           -j \
           /tmp/bom.json
