@@ -54,7 +54,7 @@ jobs:
           ghcr.io/interlynk-io/sbomqs compliance \
           --ntia \
           -j \
-          /tmp/bom.json
+          /tmp/bom.json > compliance.json
 
     - name: Score SBOM
       run: |
@@ -62,7 +62,7 @@ jobs:
           -v /tmp:/tmp \
           ghcr.io/interlynk-io/sbomqs score \
           -j \
-          /tmp/bom.json
+          /tmp/bom.json > score_evaluation.json
 
     - name: list files
       run: ls -la
