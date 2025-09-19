@@ -37,7 +37,7 @@ jobs:
             -v "$(pwd)":/app:rw \
             -v /tmp:/tmp \
             -t ghcr.io/cyclonedx/cdxgen:latest \
-            -r /app -o /app/sbom.json -t ${{ inputs.src_type }} \
+            -r /app -o /tmp/sbom.json -t ${{ inputs.src_type }} \
             --profile ${{ inputs.src_profile }} --json-pretty
         
       - name: Scan SBOM with trivy
@@ -48,11 +48,11 @@ jobs:
             -t docker.io/aquasec/trivy:latest sbom \
             --format "cyclonedx" \
             --scanners vuln,license \
-            --output /app/trivy-report-cdxgen-src.json \
-            /app/sbom.json
+            --output /tmp/trivy-report-cdxgen-src.json \
+            /tmp/sbom.json
 
       - name: Upload SBOM results
         uses: actions/upload-artifact@v4
         with:
           name: $(basename ${{ inputs.src_repository }})
-          path: ${{github.workspace}}/*.json      
+          path: /tmp/*.json      
