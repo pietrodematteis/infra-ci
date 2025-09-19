@@ -15,10 +15,6 @@ on:
         description: 'Project Type (java, python, dotnet) see https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES'
         required: false
         default: 'java'
-      src_scanners:
-        description: Trivy scanners (es. vuln,license), def. vuln
-        required: false
-        default: 'vuln'
 
 jobs:
   build:
