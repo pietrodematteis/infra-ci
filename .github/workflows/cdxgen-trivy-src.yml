@@ -54,5 +54,5 @@ jobs:
       - name: Upload SBOM results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ basename(inputs.src_repository) }}
+          name: ${{ basename inputs.src_repository }}
           path: /tmp/*.json      
