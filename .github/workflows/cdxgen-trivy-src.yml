@@ -51,8 +51,16 @@ jobs:
             --output /tmp/trivy-report-cdxgen-src.json \
             /tmp/sbom.json
 
+      - name: artifact name
+        id: artifactname
+        run: |
+          out_name="${{ inputs.src_repository }}"
+          out_name="${safe_name//\//-}"  # Replace '/' with '-'
+          echo "out_name=$out_name" >> $GITHUB_OUTPUT
+
       - name: Upload SBOM results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ replace(inputs.src_repository, '/', '-') }}
-          path: /tmp/*.json      
+          name: ${{ steps.artifactname.outputs.out_name }}
+          path: /tmp/*.json
+          if-no-files-found: warn
