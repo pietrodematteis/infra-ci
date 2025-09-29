@@ -1,0 +1,72 @@
+name: Generate SBOM with cdxgen
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+      src_type:
+        description: 'Project Type (java, python, dotnet) see https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES'
+        required: false
+        default: 'java'
+      src_profile:
+        description: BOM profile to use for generation. Default generic.
+        required: false
+        type: choice
+        options:
+          - 'appsec'
+          - 'research'
+          - 'operational'
+          - 'threat-modeling'
+          - 'license-compliance'
+          - 'generic'
+          - 'machine-learning'
+          - 'ml'
+          - 'deep-learning'
+          - 'ml-deep'
+          - 'ml-tiny'
+        default: 'generic'
+env:
+  OUTPUT_NAME: 'cyclonedxSBOM'
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.src_repository }}
+        ref: ${{ inputs.src_branch }}
+
+    - name: Generate SBOM using cdxgen container
+      run: |
+        docker run --rm \
+          -v "$(pwd)":/app:rw \
+          -v /tmp:/tmp \
+          -t ghcr.io/cyclonedx/cdxgen:latest \
+          -r /app -o /app/bom.json -t ${{ inputs.src_type }} \
+          --profile ${{ inputs.src_profile }} --json-pretty
+
+    - name: list files
+      run: ls -la
+      
+    - name: artifact name
+      id: artifactname
+      run: |
+        out_name="${{ inputs.src_repository }}"
+        out_name="${out_name//\//-}"  # Replace '/' with '-'
+        echo "out_name=$out_name" >> $GITHUB_OUTPUT
+          
+    - name: Upload SBOM results
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.artifactname.outputs.out_name }}
+        path: /tmp/*.json
+        if-no-files-found: warn
