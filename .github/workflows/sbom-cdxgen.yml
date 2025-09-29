@@ -54,9 +54,6 @@ jobs:
           -r /app -o /tmp/bom.json -t ${{ inputs.src_type }} \
           --profile ${{ inputs.src_profile }} --json-pretty
 
-    - name: list files
-      run: ls -la
-      
     - name: artifact name
       id: artifactname
       run: |
