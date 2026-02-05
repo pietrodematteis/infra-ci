@@ -1,4 +1,4 @@
-name: Generate SBOM with cdxgen
+name: Trivy Generate output SCA vs SBOM
 
 on:
   workflow_dispatch:
@@ -15,25 +15,9 @@ on:
         description: 'Project Type (java, python, dotnet) see https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES'
         required: false
         default: 'java'
-      src_profile:
-        description: BOM profile to use for generation. Default generic.
-        required: false
-        type: choice
-        options:
-          - 'appsec'
-          - 'research'
-          - 'operational'
-          - 'threat-modeling'
-          - 'license-compliance'
-          - 'generic'
-          - 'machine-learning'
-          - 'ml'
-          - 'deep-learning'
-          - 'ml-deep'
-          - 'ml-tiny'
-        default: 'generic'
+      
 env:
-  OUTPUT_NAME: 'cyclonedxSBOM'
+  OUTPUT_NAME: 'trivy_sca_vs_sbom'
 jobs:
   sbom:
     runs-on: ubuntu-latest
@@ -45,14 +29,15 @@ jobs:
         repository: ${{ inputs.src_repository }}
         ref: ${{ inputs.src_branch }}
 
-    - name: Generate SBOM using cdxgen container
+    - name: Generate SBOM using Trivy
       run: |
-        docker run --rm \
-          -v "$(pwd)":/app:rw \
-          -v /tmp:/tmp \
-          -t ghcr.io/cyclonedx/cdxgen:latest \
-          -r /app -o /tmp/bom.json -t ${{ inputs.src_type }} \
-          --profile ${{ inputs.src_profile }} --json-pretty
+          docker run --rm \
+            -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
+            -v /tmp:/tmp \
+            -t docker.io/aquasec/trivy:latest fs /app \
+            --format "cyclonedx" \
+            --scanners vuln,license \
+            --output "/tmp/trivy-sbom.json"
 
     - name: artifact name
       id: artifactname
