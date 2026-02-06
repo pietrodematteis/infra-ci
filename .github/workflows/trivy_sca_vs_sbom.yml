@@ -3,6 +3,10 @@ name: Trivy Generate output SCA vs SBOM
 on:
   workflow_dispatch:
     inputs:
+      src_dir:
+        description: 'Source Folder'
+        required: true
+        default: ''
       src_repository:
         description: 'Source Repository'
         required: true
@@ -39,6 +43,16 @@ jobs:
             --scanners vuln,license \
             --output "/tmp/trivy-sbom.json"
 
+    - name: Trivy SCA
+      run: |
+          docker run --rm \
+            -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
+            -v /tmp:/tmp \
+            -t docker.io/aquasec/trivy:latest fs /app \
+            --format "json" \
+            --scanners vuln,license \
+            --output "/tmp/trivy_sca.json"
+            
     - name: artifact name
       id: artifactname
       run: |
