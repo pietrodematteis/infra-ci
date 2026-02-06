@@ -39,7 +39,7 @@ jobs:
             --scanners vuln,license \
             --output "/tmp/trivy-sbom.json"
 
-    - name: Trivy SCA
+    - name: Trivy SCA json format
       run: |
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
@@ -48,6 +48,16 @@ jobs:
             --format "json" \
             --scanners vuln,license \
             --output "/tmp/trivy_sca.json"
+
+    - name: Trivy SCA table format
+      run: |
+          docker run --rm \
+            -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
+            -v /tmp:/tmp \
+            -t docker.io/aquasec/trivy:latest fs /app \
+            --format "json" \
+            --scanners vuln,license \
+            --dependency-tree
             
     - name: artifact name
       id: artifactname
@@ -60,5 +70,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.artifactname.outputs.out_name }}
-        path: /tmp/*.json
+        path: /tmp/*.*
         if-no-files-found: warn
