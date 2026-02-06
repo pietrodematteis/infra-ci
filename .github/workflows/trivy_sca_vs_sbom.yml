@@ -5,7 +5,7 @@ on:
     inputs:
       src_dir:
         description: 'Source Folder'
-        required: true
+        required: false
         default: ''
       src_repository:
         description: 'Source Repository'
@@ -15,10 +15,6 @@ on:
         description: 'Branch'
         required: false
         default: ''
-      src_type:
-        description: 'Project Type (java, python, dotnet) see https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES'
-        required: false
-        default: 'java'
       
 env:
   OUTPUT_NAME: 'trivy_sca_vs_sbom'
