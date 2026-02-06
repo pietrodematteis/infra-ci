@@ -58,6 +58,20 @@ jobs:
             --format "table" \
             --scanners vuln,license \
             --dependency-tree
+    
+    - name: Install Java dependencies
+      run: |
+          if [ -f pom.xml ]; then mvn -B dependency:resolve || true; fi   
+
+    - name: Generate again SBOM using Trivy
+      run: |
+          docker run --rm \
+            -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
+            -v /tmp:/tmp \
+            -t docker.io/aquasec/trivy:latest fs /app \
+            --format "cyclonedx" \
+            --scanners vuln,license \
+            --output "/tmp/trivy-sbom-dependency.json"
             
     - name: artifact name
       id: artifactname
@@ -65,7 +79,7 @@ jobs:
         out_name="${{ inputs.src_repository }}"
         out_name="${out_name//\//-}"  # Replace '/' with '-'
         echo "out_name=$out_name" >> $GITHUB_OUTPUT
-          
+  
     - name: Upload SBOM results
       uses: actions/upload-artifact@v4
       with:
