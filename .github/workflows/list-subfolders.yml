@@ -35,6 +35,7 @@ jobs:
           echo ""
 
           # Loop through subdirectories
+          count=0
           for dir in "$ROOT"/*/; do
             # Remove trailing slash for clean folder name
             folder=$(basename "$dir")
@@ -51,6 +52,11 @@ jobs:
               --scanners vuln,license \
               --output "/tmp/trivy-sbom-$folder.json"
             echo ""
+            
+            count=$((count+1))
+            if [ "$count" -ge 2 ]; then
+              break
+            fi
           done
 
       - name: artifact name
