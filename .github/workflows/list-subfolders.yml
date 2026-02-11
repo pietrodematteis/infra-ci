@@ -54,9 +54,9 @@ jobs:
             echo ""
             
             count=$((count+1))
-            if [ "$count" -ge 2 ]; then
-              break
-            fi
+            #if [ "$count" -ge 2 ]; then
+            #  break
+            #fi
           done
 
       - name: artifact name
