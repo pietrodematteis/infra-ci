@@ -31,9 +31,38 @@ jobs:
         run: |
           ROOT=${{ inputs.src_dir }}
 
-          echo "Reading subfolders in: $ROOT"
+          echo "Running command inside each subfolder in: $ROOT"
           echo ""
 
-          # List only directories, remove trailing slashes
-          find "$ROOT" -mindepth 1 -maxdepth 1 -type d -print0 | \
-            xargs -0 -n1 basename
+          # Loop through subdirectories
+          for dir in "$ROOT"/*/; do
+            # Remove trailing slash for clean folder name
+            folder=$(basename "$dir")
+
+            echo "=== Folder: $folder ==="
+            
+            # Your command here:
+            #ls -la "$dir"
+            docker run --rm \
+              -v "$dir":/app:rw \
+              -v /tmp:/tmp \
+              -t docker.io/aquasec/trivy:latest fs /app \
+              --format "cyclonedx" \
+              --scanners vuln,license \
+              --output "/tmp/trivy-sbom-$folder.json"
+            echo ""
+          done
+
+      - name: artifact name
+        id: artifactname
+        run: |
+          out_name="${{ inputs.src_repository }}"
+          out_name="${out_name//\//-}"  # Replace '/' with '-'
+          echo "out_name=$out_name" >> $GITHUB_OUTPUT
+  
+      - name: Upload SBOM results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifactname.outputs.out_name }}
+          path: /tmp/*.json
+          if-no-files-found: warn
