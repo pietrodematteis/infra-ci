@@ -43,9 +43,9 @@ jobs:
             echo "=== Folder: $folder ==="
             
             # Your command here:
-            ls -la $(pwd)/$ROOT/$dir
+            ls -la $(pwd)/$dir
             docker run --rm \
-              -v $(pwd)/$ROOT/$dir:/app:rw \
+              -v $(pwd)/$dir:/app:rw \
               -v /tmp:/tmp \
               -t docker.io/aquasec/trivy:latest fs /app \
               --format "cyclonedx" \
