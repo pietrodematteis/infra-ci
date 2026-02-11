@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ inputs.src_repository }}
-          ref: ${{ inputs.src_branch }}src_branch }}
+          ref: ${{ inputs.src_branch }}
 
       - name: List subfolders in database/data1
         run: |
