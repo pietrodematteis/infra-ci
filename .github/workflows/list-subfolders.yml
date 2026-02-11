@@ -1,0 +1,39 @@
+name: List Subfolders
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_dir:
+        description: 'Source Folder'
+        required: false
+        default: ''
+      src_repository:
+        description: 'Source Repository'
+        required: true
+        default: ''
+      src_branch:
+        description: 'Branch'
+        required: false
+        default: ''
+
+jobs:
+  list-folders:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.src_repository }}
+          ref: ${{ inputs.src_branch }}
+
+      - name: List subfolders in database/data1
+        run: |
+          ROOT="."
+
+          echo "Reading subfolders in: $ROOT"
+          echo ""
+
+          # List only directories, remove trailing slashes
+          find "$ROOT" -mindepth 1 -maxdepth 1 -type d -print0 | \
+            xargs -0 -n1 basename
