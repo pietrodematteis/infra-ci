@@ -45,7 +45,7 @@ jobs:
             # Your command here:
             #ls -la "$dir"
             docker run --rm \
-              -v "$dir":/app:rw \
+              -v $(pwd)/$ROOT/"$dir":/app:rw \
               -v /tmp:/tmp \
               -t docker.io/aquasec/trivy:latest fs /app \
               --format "cyclonedx" \
