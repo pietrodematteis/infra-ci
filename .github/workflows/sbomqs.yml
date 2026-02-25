@@ -40,7 +40,7 @@ jobs:
         docker run --rm \
           -v "$(pwd)":/app:rw \
           -v /tmp:/tmp \
-          -t ghcr.io/cyclonedx/cdxgen:v11.4.3@sha256:a7f032771f4937468dc288f8e94d292e84fb4f698bbd8b0c3a059838bb481277 \
+          -t ghcr.io/cyclonedx/cdxgen:v12.1.1 \
           -r /app -o /tmp/bom.json -t ${{ inputs.src_type }} \
           --profile license-compliance --json-pretty
 
