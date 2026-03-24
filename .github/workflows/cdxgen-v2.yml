@@ -61,7 +61,7 @@ jobs:
           -v "$(pwd)":/app:rw \
           -v /tmp:/tmp \
           -t ${{ inputs.img_type }} \
-          -r /app -o /app/bom.json -t ${{ inputs.src_type }} \
+          -r /app -o /tmp/bom.json -t ${{ inputs.src_type }} \
           --profile ${{ inputs.src_profile }} --json-pretty
 
     - name: list files
@@ -71,4 +71,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.OUTPUT_NAME }}
-        path: ${{github.workspace}}/*.json 
+        path: /tmp/*.json
