@@ -7,7 +7,15 @@ on:
         description: 'Container Image Repository'
         required: true
         default: ''
-
+      src_vuln_type:
+        description: Vulnerability types (os,library). Default os,library.
+        required: false
+        type: choice
+        options:
+          - 'os'
+          - 'library'
+          - 'os,library'
+        default: 'os,library'
 env:
   OUTPUT_NAME: 'cyclonedxSBOM'
 jobs:
@@ -29,7 +37,7 @@ jobs:
           output: 'cyclonedx-SBOM.json'
           #severity: 'CRITICAL,HIGH'
           exit-code: '0'
-          vuln-type: 'os,library'
+          vuln-type: ${{ inputs.src_vuln_type }}
       
       - name: Run Trivy for vulnerability scanner
         uses: aquasecurity/trivy-action@v0.35.0
@@ -39,7 +47,7 @@ jobs:
           format: 'cyclonedx'
           output: 'cyclonedx-vuln-SBOM.json'
           exit-code: '0'
-          vuln-type: 'os,library'
+          vuln-type: ${{ inputs.src_vuln_type }}
           scanners: 'vuln'
           # On a subsequent call to the action we know trivy is already installed so can skip this
           skip-setup-trivy: true
@@ -52,7 +60,7 @@ jobs:
           format: 'cyclonedx'
           output: 'cyclonedx-license-SBOM.json'
           exit-code: '0'
-          vuln-type: 'os,library'
+          vuln-type: ${{ inputs.src_vuln_type }}
           scanners: 'license'
           # On a subsequent call to the action we know trivy is already installed so can skip this
           skip-setup-trivy: true
