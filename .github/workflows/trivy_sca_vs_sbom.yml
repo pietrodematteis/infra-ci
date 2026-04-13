@@ -34,7 +34,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:latest fs /app \
+            -t docker.io/aquasec/trivy:0.69.3 fs /app \
             --format "cyclonedx" \
             --scanners vuln,license \
             --output "/tmp/trivy-sbom.json"
@@ -44,7 +44,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:latest fs /app \
+            -t docker.io/aquasec/trivy:0.69.3 fs /app \
             --format "json" \
             --scanners vuln,license \
             --output "/tmp/trivy_sca.json"
@@ -54,7 +54,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:latest fs /app \
+            -t docker.io/aquasec/trivy:0.69.3 fs /app \
             --format "table" \
             --scanners vuln,license \
             --dependency-tree
@@ -68,7 +68,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:latest fs /app \
+            -t docker.io/aquasec/trivy:0.69.3 fs /app \
             --format "cyclonedx" \
             --scanners vuln,license \
             --output "/tmp/trivy-sbom-dependency.json"
