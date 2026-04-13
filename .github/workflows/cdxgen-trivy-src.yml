@@ -45,7 +45,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:latest sbom \
+            -t docker.io/aquasec/trivy:0.69.3 sbom \
             --format "cyclonedx" \
             --scanners vuln,license \
             --output /tmp/trivy-report-cdxgen-src.json \
