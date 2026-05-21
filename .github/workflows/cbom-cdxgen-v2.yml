@@ -29,7 +29,7 @@ jobs:
         with:
           repository: ${{ inputs.src_repository }}
           ref: ${{ inputs.src_branch }}
-      - name: Generate SBOM using cdxgen container
+      - name: Generate CBOM using cdxgen container
         run: |
           docker run --rm \
             -v "$(pwd)":/app:rw \
@@ -38,8 +38,15 @@ jobs:
             -r /app -o /tmp/cbom.json --include-crypto -t ${{ inputs.src_type }} 
       - name: list files
         run: ls -la
-      - name: Upload Scan Results
+      - name: artifact name
+        id: artifactname
+        run: |
+          out_name="${{ inputs.src_repository }}"
+          out_name="${out_name//\//-}"  # Replace '/' with '-'
+          echo "out_name=$out_name" >> $GITHUB_OUTPUT
+      - name: Upload CBOM results
         uses: actions/upload-artifact@v7
         with:
-          name: cbom
-          path: cbom.json
+          name: ${{ steps.artifactname.outputs.out_name }}
+          path: /tmp/*.json
+          if-no-files-found: warn
