@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ inputs.src_repository }}
           ref: ${{ inputs.src_branch }}
@@ -35,7 +35,7 @@ jobs:
       #- name: crypto check
       #  run: grep -E "Cipher|MessageDigest|KeyPairGenerator|KeyStore" -r src/
       - name: Upload Scan Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cbom
           path: bom.json
