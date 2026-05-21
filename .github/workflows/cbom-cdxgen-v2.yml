@@ -1,4 +1,4 @@
-name: Generate CBOM with cdxgen
+name: Generate CBOM with cdxgen (v.2 - use docker image instead install it) 
 
 on:
   workflow_dispatch:
@@ -15,6 +15,11 @@ on:
         description: 'Project Type (java, python, dotnet)'
         required: false
         default: 'java'
+      img_type:
+        description: 'Custom Container Images see https://cdxgen.github.io/cdxgen/#/ADVANCED?id=custom-container-images'
+        required: false
+        default: 'ghcr.io/cyclonedx/cdxgen:latest'
+      
 jobs:
   security-scan:
     runs-on: ubuntu-latest
@@ -24,18 +29,17 @@ jobs:
         with:
           repository: ${{ inputs.src_repository }}
           ref: ${{ inputs.src_branch }}
-      - name: Install cdxgen
+      - name: Generate SBOM using cdxgen container
         run: |
-          npm install -g @cyclonedx/cdxgen
-      - name: Generate CBOM
-        #run: cdxgen -o cbom.json --include-crypto -t ${{ inputs.src_type }}
-        run: cbom -t ${{ inputs.src_type }}
+          docker run --rm \
+            -v "$(pwd)":/app:rw \
+            -v /tmp:/tmp \
+            -t ${{ inputs.img_type }} \
+            -r /app -o /tmp/cbom.json --include-crypto -t ${{ inputs.src_type }} 
       - name: list files
         run: ls -la
-      #- name: crypto check
-      #  run: grep -E "Cipher|MessageDigest|KeyPairGenerator|KeyStore" -r src/
       - name: Upload Scan Results
         uses: actions/upload-artifact@v7
         with:
           name: cbom
-          path: bom.json
+          path: cbom.json
