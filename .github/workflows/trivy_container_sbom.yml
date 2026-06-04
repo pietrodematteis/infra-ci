@@ -29,7 +29,7 @@ jobs:
     steps:
 
       - name: Generate SBOM
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         #see https://github.com/aquasecurity/trivy-action for documentation
         with:
           image-ref: ${{ inputs.image_repository }}
@@ -40,7 +40,7 @@ jobs:
           vuln-type: ${{ inputs.src_vuln_type }}
       
       - name: Run Trivy for vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'sbom'
           scan-ref: 'cyclonedx-SBOM.json'
@@ -53,7 +53,7 @@ jobs:
           skip-setup-trivy: true
           
       - name: Run Trivy for license scanner
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'sbom'
           scan-ref: 'cyclonedx-SBOM.json'
@@ -66,7 +66,7 @@ jobs:
           skip-setup-trivy: true
           
       - name: Upload Trivy results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
            name: ${{ env.OUTPUT_NAME }}
            path: ${{github.workspace}}/*.json     
