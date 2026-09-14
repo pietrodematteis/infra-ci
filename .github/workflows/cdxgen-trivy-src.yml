@@ -36,7 +36,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)":/app:rw \
             -v /tmp:/tmp \
-            -t ghcr.io/cyclonedx/cdxgen:latest \
+            -t ghcr.io/cyclonedx/cdxgen:13.0.1 \
             -r /app -o /tmp/sbom.json -t ${{ inputs.src_type }} \
             --profile ${{ inputs.src_profile }} --json-pretty
         
