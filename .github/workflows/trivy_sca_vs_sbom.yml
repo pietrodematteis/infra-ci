@@ -24,7 +24,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.src_repository }}
         ref: ${{ inputs.src_branch }}
@@ -34,7 +34,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:0.69.3 fs /app \
+            -t docker.io/aquasec/trivy:0.74.0 fs /app \
             --format "cyclonedx" \
             --scanners vuln,license \
             --output "/tmp/trivy-sbom.json"
@@ -54,7 +54,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:0.69.3 fs /app \
+            -t docker.io/aquasec/trivy:0.74.0 fs /app \
             --format "table" \
             --scanners vuln,license \
             --dependency-tree
@@ -68,7 +68,7 @@ jobs:
           docker run --rm \
             -v "$(pwd)/${{ inputs.src_dir }}":/app:rw \
             -v /tmp:/tmp \
-            -t docker.io/aquasec/trivy:0.69.3 fs /app \
+            -t docker.io/aquasec/trivy:0.74.0 fs /app \
             --format "cyclonedx" \
             --scanners vuln,license \
             --output "/tmp/trivy-sbom-dependency.json"
@@ -81,7 +81,7 @@ jobs:
         echo "out_name=$out_name" >> $GITHUB_OUTPUT
   
     - name: Upload SBOM results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ steps.artifactname.outputs.out_name }}
         path: /tmp/*.json
