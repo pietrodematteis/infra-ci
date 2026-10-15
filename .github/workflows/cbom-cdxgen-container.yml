@@ -1,4 +1,4 @@
-name: Generate CBOM with cdxgen for Docker Images
+name: CBOM for Docker Image with cdxgen (installed)
 
 on:
   workflow_dispatch:

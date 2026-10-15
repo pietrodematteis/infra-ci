@@ -1,0 +1,47 @@
+name: CBOM for Docker Image with Trivy (use Image)
+
+# https://trivy.dev/docs/latest/guide/scanner/crypto/
+# example: trivy image --scanners crypto --format cyclonedx --output result.cdx.json myimage:1.0.0
+      
+on:
+  workflow_dispatch:
+    inputs:
+      image_repository:
+        description: 'Container Image Repository'
+        required: true
+        default: ''
+      
+env:
+  OUTPUT_NAME: 'cyclonedxSBOM'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+    
+    steps:
+      - name: Generate CBOM using Trivy
+        run: |
+          docker run --rm \
+            -v /tmp:/tmp \
+            -t aquasec/trivy:0.75.0 image \
+            --format "cyclonedx" \
+            --scanners "crypto" \
+            --output "/tmp/trivy-cbom.json" \
+             ${{ inputs.image_repository }}
+          
+      - name: artifact name
+        id: artifactname
+        run: |
+          out_name="${{ inputs.image_repository }}"
+          out_name="${out_name//\//-}"  # Replace '/' with '-'
+          echo "out_name=$out_name" >> $GITHUB_OUTPUT
+  
+      - name: Upload CBOM results
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.artifactname.outputs.out_name }}
+          path: /tmp/*.json
+          if-no-files-found: warn
