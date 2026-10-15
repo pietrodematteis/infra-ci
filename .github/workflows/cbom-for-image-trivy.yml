@@ -12,9 +12,25 @@ on:
         default: ''
       
 env:
-  OUTPUT_NAME: 'cyclonedxSBOM'
+  
 jobs:
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      trivy-image: ${{ steps.config.outputs.trivy-image }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: config
+        shell: bash
+        run: |
+          source .github/config/pipeline.env
+          echo "trivy-image=${TRIVY_IMAGE}" >> "$GITHUB_OUTPUT"
+
+
   build:
+    needs: config
     runs-on: ubuntu-latest
     permissions:
       contents: read # for actions/checkout to fetch code
@@ -26,7 +42,7 @@ jobs:
         run: |
           docker run --rm \
             -v /tmp:/tmp \
-            -t aquasec/trivy:0.75.0 image \
+            -t ${{ needs.config.outputs.trivy-image }} image \
             --format "cyclonedx" \
             --scanners "crypto" \
             --output "/tmp/trivy-cbom.json" \
