@@ -27,6 +27,7 @@ jobs:
           out_name="${{ inputs.src_repository }}"
           out_name="${out_name//\//-}"  # Replace '/' with '-'
           out_name="${out_name//./-}"  # Replace '.' with '-'
+          out_name="${out_name//:/-}"  # Replace ':' with '-'
           echo "out_name=$out_name" >> $GITHUB_OUTPUT
   
       - name: Upload AI-BOM results
