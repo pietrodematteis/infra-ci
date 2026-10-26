@@ -1,0 +1,41 @@
+name: AIBOM AI-BOM from a Hugging Face purl or URL with cdxgen (installed)
+
+on:
+  workflow_dispatch:
+    inputs:
+      src_repository:
+        description: 'Hugging Face purl or URL'
+        required: true
+        default: ''
+      src_type:
+        description: 'Project Type (docker, container)'
+        required: false
+        default: 'java'
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install cdxgen
+        run: |
+          npm install -g @cyclonedx/cdxgen
+      - name: Generate AI-BOM
+        run: cdxgen -r --include-formulation -o /tmp/aibom.json \
+            --bom-audit \
+            --bom-audit-categories ai-bom ${{ inputs.src_repository }}
+      
+      - name: list files
+        run: ls -la
+        
+      - name: artifact name
+        id: artifactname
+        run: |
+          out_name="${{ inputs.src_repository }}"
+          out_name="${out_name//\//-}"  # Replace '/' with '-'
+          echo "out_name=$out_name" >> $GITHUB_OUTPUT
+  
+      - name: Upload AI-BOM results
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.artifactname.outputs.out_name }}
+          path: /tmp/*.json
+          if-no-files-found: warn
