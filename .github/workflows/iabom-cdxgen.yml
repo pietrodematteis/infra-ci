@@ -17,8 +17,7 @@ jobs:
           npm install -g @cyclonedx/cdxgen
       - name: Generate AI-BOM
         run: aibom ${{ inputs.src_repository }}
-        #run: cdxgen -r --include-formulation -o /tmp/aibom.json --bom-audit --bom-audit-categories ai-bom ${{ inputs.src_repository }}
-      
+        
       - name: list files
         run: ls -la
         
