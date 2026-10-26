@@ -16,7 +16,8 @@ jobs:
         run: |
           npm install -g @cyclonedx/cdxgen
       - name: Generate AI-BOM
-        run: cdxgen -r --include-formulation -o /tmp/aibom.json --bom-audit --bom-audit-categories ai-bom ${{ inputs.src_repository }}
+        run: aibom ${{ inputs.src_repository }}
+        #run: cdxgen -r --include-formulation -o /tmp/aibom.json --bom-audit --bom-audit-categories ai-bom ${{ inputs.src_repository }}
       
       - name: list files
         run: ls -la
@@ -26,12 +27,12 @@ jobs:
         run: |
           out_name="${{ inputs.src_repository }}"
           out_name="${out_name//\//-}"  # Replace '/' with '-'
-          out_name="${out_name//.//-}"  # Replace '.' with '-'
+          out_name="${out_name//./-}"  # Replace '.' with '-'
           echo "out_name=$out_name" >> $GITHUB_OUTPUT
   
       - name: Upload AI-BOM results
         uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifactname.outputs.out_name }}
-          path: /tmp/*.json
+          path: *.json
           if-no-files-found: warn
