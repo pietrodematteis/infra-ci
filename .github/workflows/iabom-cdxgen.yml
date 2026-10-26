@@ -33,5 +33,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.artifactname.outputs.out_name }}
-          path: /*.json
+          path: ./*.json
           if-no-files-found: warn
