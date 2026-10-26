@@ -7,10 +7,7 @@ on:
         description: 'Hugging Face purl or URL'
         required: true
         default: ''
-      src_type:
-        description: 'Project Type (docker, container)'
-        required: false
-        default: 'java'
+
 jobs:
   security-scan:
     runs-on: ubuntu-latest
